@@ -17,7 +17,6 @@ app.use(cors());
 
 // Load environment variables from .env file
 dotenv.config();
-
 const PORT = process.env.PORT || 5000;
 const CONNECTION = process.env.MONGODB_CONNECTION;
 
@@ -61,18 +60,20 @@ io.on("connection", (socket) => {
 
   socket.emit("connection-status", "a user connected.");
 
+  // add user
   socket.on("addUsers", (userId) => {
     addUser(userId, socket.id);
     io.emit("getUsers", users);
   });
 
+  // send message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     if (!receiverId) {
-      console.error("User not found with ID:", receiverId);
       socket.emit("errorMessage", "User not found. Please try again later.");
       return;
     }
 
+    // get message
     try {
       socket.in(receiverId).emit("getMessage", { senderId, receiverId, text });
     } catch (error) {
@@ -80,6 +81,7 @@ io.on("connection", (socket) => {
     }
   });
 
+  // user disconnected
   socket.on("disconnect", () => {
     console.log("A user disconnected!");
     removeUser(socket.id);
