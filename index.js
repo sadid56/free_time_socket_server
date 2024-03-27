@@ -94,6 +94,11 @@ io.on("connection", (socket) => {
   });
 });
 
+app.get("/", (req, res)=>{
+  console.log("socket server...");
+  res.send("Runing...")
+})
+
 // Start server
 server.listen(PORT, () => {
   console.log(`Listening at Port ${PORT}`);
