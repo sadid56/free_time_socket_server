@@ -30,6 +30,7 @@ const server = http.createServer(app);
 
 // Initialize socket.io with the server
 const io = socketIO(server, {
+  pingTimeOut: 60000,
   cors: {
     origin: ["http://localhost:5173", "https://free-time-56230.web.app"],
   }
@@ -72,7 +73,6 @@ io.on("connection", (socket) => {
       socket.emit("errorMessage", "User not found. Please try again later.");
       return;
     }
-
     // get message
     try {
       socket.in(receiverId).emit("getMessage", { senderId, receiverId, text });
@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
 
 app.get("/", (req, res)=>{
   console.log("socket server...");
-  res.send("Runing...")
+  res.send("Free time socket server running...")
 })
 
 // Start server
